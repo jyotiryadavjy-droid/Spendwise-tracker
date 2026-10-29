@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SpendWise</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #102c26, #236b50);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .welcome {
+            background: #174b3d;
+            color: white;
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 45px;
+        }
+
+        .brand span {
+            color: #8ee3b1;
+        }
+
+        .welcome h1 {
+            font-size: 34px;
+            margin-bottom: 15px;
+        }
+
+        .welcome p {
+            color: #d6e9df;
+            line-height: 1.8;
+        }
+
+        .form-section {
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            color: #18392e;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #78847e;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #263b32;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d8e2dc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fbfdfb;
+        }
+
+        input:focus {
+            border-color: #238258;
+            box-shadow: 0 0 0 3px rgba(35, 130, 88, 0.12);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 48px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            background: #207653;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background 0.2s;
+        }
+
+        .submit-button:hover {
+            background: #165c40;
+        }
+
+        .message {
+            padding: 11px;
+            margin-bottom: 16px;
+            border-radius: 7px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            color: #a32323;
+            background: #fff0ef;
+        }
+
+        .success {
+            color: #17643a;
+            background: #e8f7ed;
+        }
+
+        .register-link {
+            text-align: center;
+            color: #68746e;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #207653;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .brand {
+                margin-bottom: 18px;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+
+            .form-section {
+                padding: 30px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <section class="welcome">
+        <div class="brand">Spend<span>Wise</span></div>
+
+        <h1>Welcome back!</h1>
+
+        <p>
+            Your finances, organized in one place.
+            Sign in to continue managing your expenses
+            and building better financial habits.
+        </p>
+    </section>
+
+    <section class="form-section">
+        <h2>Sign in</h2>
+        <p class="subtitle">Enter your account details below.</p>
+
+        <!-- Display login error from Spring Security -->
+        <div th:if="${param.error}"
+             class="message error">
+            Invalid email or password. Please try again.
+        </div>
+
+        <!-- Display logout confirmation -->
+        <div th:if="${param.logout}"
+             class="message success">
+            You have logged out successfully.
+        </div>
+
+        <!-- Display registration or other controller messages -->
+        <div th:if="${message}"
+             class="message success"
+             th:text="${message}">
+        </div>
+
+        <!-- Spring Security processes this form -->
+        <form th:action="@{/users/login}" method="post">
+
+            <div class="field">
+                <label for="email">Email address</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="username"
+                    required>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword()"
+                        aria-label="Show password">
+                        👁
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button">
+                Sign In →
+            </button>
+        </form>
+
+        <p class="register-link">
+            Don't have an account?
+            <a th:href="@{/users/register}">Create an account</a>
+        </p>
+    </section>
+
+</div>
+
+<script>
+    function togglePassword() {
+        const password = document.getElementById("password");
+        const button = document.querySelector(".toggle-password");
+
+        if (password.type === "password") {
+            password.type = "text";
+            button.textContent = "🙈";
+            button.setAttribute("aria-label", "Hide password");
+        } else {
+            password.type = "password";
+            button.textContent = "👁";
+            button.setAttribute("aria-label", "Show password");
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SpendWise</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #102c26, #236b50);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .welcome {
+            background: #174b3d;
+            color: white;
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 45px;
+        }
+
+        .brand span {
+            color: #8ee3b1;
+        }
+
+        .welcome h1 {
+            font-size: 34px;
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        .welcome p {
+            color: #d6e9df;
+            line-height: 1.8;
+        }
+
+        .benefits {
+            margin-top: 28px;
+            line-height: 2.4;
+            font-size: 14px;
+            color: #e4f5eb;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .form-section h2 {
+            color: #18392e;
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #78847e;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            color: #263b32;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d8e2dc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fbfdfb;
+        }
+
+        input:focus {
+            border-color: #238258;
+            box-shadow: 0 0 0 3px rgba(35, 130, 88, 0.12);
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            padding-right: 50px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            margin: 0;
+            padding: 5px;
+            background: transparent;
+            color: #207653;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .toggle-password:hover {
+            background: transparent;
+        }
+
+        .hint {
+            display: block;
+            color: #77847d;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            background: #207653;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .submit-button:hover {
+            background: #165c40;
+        }
+
+        .message {
+            padding: 11px;
+            margin-bottom: 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .success {
+            color: #17643a;
+            background: #e8f7ed;
+        }
+
+        .error {
+            color: #a32323;
+            background: #fff0ef;
+        }
+
+        .signin {
+            text-align: center;
+            color: #68746e;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .signin a {
+            color: #207653;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .signin a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .brand {
+                margin-bottom: 18px;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+
+            .benefits {
+                display: none;
+            }
+
+            .form-section {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <section class="welcome">
+        <div class="brand">Spend<span>Wise</span></div>
+
+        <h1>Take control of your money.</h1>
+
+        <p>
+            Track your expenses, understand your spending
+            and build smarter financial habits.
+        </p>
+
+        <div class="benefits">
+            ✓ Track daily expenses<br>
+            ✓ Manage your budget<br>
+            ✓ Work toward financial goals
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Create your account</h2>
+        <p class="subtitle">Enter your details to get started.</p>
+
+        <div th:if="${message}"
+             class="message success"
+             th:text="${message}"></div>
+
+        <div th:if="${error}"
+             class="message error"
+             th:text="${error}"></div>
+
+        <form th:action="@{/users/register}"
+              th:object="${registerRequest}"
+              method="post"
+              id="registerForm">
+
+            <div class="field">
+                <label for="name">Full name</label>
+                <input type="text"
+                       id="name"
+                       th:field="*{name}"
+                       placeholder="Enter your full name"
+                       minlength="2"
+                       maxlength="50"
+                       pattern="[A-Za-z]+([ '-][A-Za-z]+)*"
+                       title="Use 2–50 characters with letters, spaces, apostrophes or hyphens."
+                       autocomplete="name"
+                       required>
+            </div>
+
+            <div class="field">
+                <label for="email">Email address</label>
+                <input type="email"
+                       id="email"
+                       th:field="*{email}"
+                       placeholder="you@example.com"
+                       maxlength="254"
+                       autocomplete="email"
+                       required>
+            </div>
+
+            <div class="field">
+                <label for="contactNumber">Contact Number</label>
+                <input type="tel"
+                       id="contactNumber"
+                       th:field="*{contactNumber}"
+                       placeholder="Enter your contact number"
+                       inputmode="numeric"
+                       pattern="[6-9][0-9]{9}"
+                       minlength="10"
+                       maxlength="10"
+                       title="Enter a 10-digit contact number."
+                       autocomplete="tel"
+                       required>
+                <small class="hint">Enter 10 digits.</small>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+
+                <div class="password-wrapper">
+                    <input type="password"
+                           id="password"
+                           th:field="*{password}"
+                           placeholder="Create a strong password"
+                           minlength="8"
+                           maxlength="64"
+                           pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}"
+                           title="Use 8–64 characters, including uppercase, lowercase, a number and a special character."
+                           autocomplete="new-password"
+                           required>
+
+                    <button type="button"
+                            class="toggle-password"
+                            onclick="togglePassword('password', this)"
+                            aria-label="Show password">👁</button>
+                </div>
+
+                <small class="hint">
+                    Use 8+ characters, including uppercase, lowercase,
+                    a number and a special character.
+                </small>
+            </div>
+
+            <div class="field">
+                <label for="confirmPassword">Confirm Password</label>
+
+                <div class="password-wrapper">
+                    <input type="password"
+                           id="confirmPassword"
+                           th:field="*{confirmPassword}"
+                           placeholder="Enter your password again"
+                           minlength="8"
+                           maxlength="64"
+                           autocomplete="new-password"
+                           required>
+
+                    <button type="button"
+                            class="toggle-password"
+                            onclick="togglePassword('confirmPassword', this)"
+                            aria-label="Show password">👁</button>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-button">
+                Create Account →
+            </button>
+        </form>
+
+        <p class="signin">
+            Already have an account?
+            <a th:href="@{/users/login}">Sign in</a>
+        </p>
+    </section>
+
+</div>
+
+<script>
+    const form = document.getElementById("registerForm");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+
+        if (input.type === "password") {
+            input.type = "text";
+            button.textContent = "🙈";
+            button.setAttribute("aria-label", "Hide password");
+        } else {
+            input.type = "password";
+            button.textContent = "👁";
+            button.setAttribute("aria-label", "Show password");
+        }
+    }
+
+    function checkPasswords() {
+        if (confirmPassword.value === "") {
+            confirmPassword.setCustomValidity("");
+        } else if (password.value !== confirmPassword.value) {
+            confirmPassword.setCustomValidity("Passwords do not match.");
+        } else {
+            confirmPassword.setCustomValidity("");
+        }
+    }
+
+    password.addEventListener("input", checkPasswords);
+    confirmPassword.addEventListener("input", checkPasswords);
+
+    form.addEventListener("submit", function(event) {
+        checkPasswords();
+
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            form.reportValidity();
+        }
+    });
+</script>
+
+</body>
+</html>

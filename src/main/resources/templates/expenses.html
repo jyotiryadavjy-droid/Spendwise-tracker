@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses | SpendWise</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f7f4;
+            color: #20372d;
+        }
+
+        header {
+            background: #174b3d;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .brand span {
+            color: #8ee3b1;
+        }
+
+        .navigation {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .navigation a {
+            color: white;
+            text-decoration: none;
+            border: 1px solid #8ab5a0;
+            padding: 9px 15px;
+            border-radius: 7px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .navigation a:hover,
+        .navigation a.active {
+            background: #28745b;
+            border-color: #8ee3b1;
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 22px;
+        }
+
+        .heading {
+            margin-bottom: 25px;
+        }
+
+        .heading h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .heading p {
+            color: #738078;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #e3ebe5;
+            border-radius: 13px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(20, 60, 40, 0.04);
+        }
+
+        .summary-card p {
+            color: #718077;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card h2 {
+            font-size: 27px;
+            color: #207653;
+            overflow-wrap: anywhere;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e3ebe5;
+            border-radius: 13px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(20, 60, 40, 0.04);
+        }
+
+        .panel h2 {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 17px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d8e2dc;
+            border-radius: 8px;
+            background: #fbfdfb;
+            font-size: 14px;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            outline: 2px solid #b7e2c8;
+            border-color: #207653;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .primary-button {
+            border: none;
+            background: #207653;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .primary-button:hover {
+            background: #165c40;
+        }
+
+        .notice {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #e7f7ec;
+            color: #17643a;
+        }
+
+        .error {
+            background: #fff0ef;
+            color: #a32323;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 14px 12px;
+            border-bottom: 1px solid #edf1ed;
+            font-size: 14px;
+        }
+
+        th {
+            color: #718077;
+            background: #f8faf8;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .amount {
+            color: #207653;
+            font-weight: 700;
+        }
+
+        .category {
+            display: inline-block;
+            background: #e8f5ed;
+            color: #207653;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .delete-button {
+            background: #fff0ef;
+            color: #a32323;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 10px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background: #ffdcda;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #78847e;
+        }
+
+        footer {
+            text-align: center;
+            color: #859087;
+            padding: 25px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 700px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .heading h1 {
+                font-size: 25px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            header {
+                padding: 18px 5%;
+            }
+
+            .navigation {
+                gap: 8px;
+            }
+
+            .navigation a {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">Spend<span>Wise</span></div>
+
+    <nav class="navigation">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/expenses}" class="active">Expenses</a>
+        <a th:href="@{/users/login}">Sign out</a>
+    </nav>
+</header>
+
+<main>
+    <section class="heading">
+        <h1>Expense Dashboard</h1>
+        <p>Track your spending and stay in control of your money.</p>
+    </section>
+
+    <div th:if="${message}"
+         class="notice success"
+         th:text="${message}"></div>
+
+    <div th:if="${error}"
+         class="notice error"
+         th:text="${error}"></div>
+
+    <section class="summary">
+        <div class="summary-card">
+            <p>Total Expenses</p>
+            <h2>
+                ₹<span th:text="${#aggregates.sum(expenses.![amount]) ?: 0}">0</span>
+            </h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Transactions</p>
+            <h2 th:text="${#lists.size(expenses)}">0</h2>
+        </div>
+
+        <div class="summary-card">
+            <p>Latest Expense</p>
+            <h2 th:if="${!#lists.isEmpty(expenses)}"
+                th:text="'₹' + ${#numbers.formatDecimal(expenses[0].amount, 1, 2)}">
+                ₹0.00
+            </h2>
+            <h2 th:if="${#lists.isEmpty(expenses)}">₹0.00</h2>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>+ Add New Expense</h2>
+
+        <form th:action="@{/expenses/add}"
+              th:object="${expense}"
+              method="post">
+
+            <div class="form-grid">
+
+                <div class="field">
+                    <label for="amount">Amount (₹)</label>
+                    <input type="number"
+                           id="amount"
+                           th:field="*{amount}"
+                           min="0.01"
+                           max="9999999999.99"
+                           step="0.01"
+                           placeholder="e.g. 250.00"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label for="category">Category</label>
+                    <select id="category"
+                            th:field="*{category}"
+                            required>
+                        <option value="">Choose category</option>
+                        <option value="Food">Food</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Health">Health</option>
+                        <option value="Education">Education</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="description">Description</label>
+                    <input type="text"
+                           id="description"
+                           th:field="*{description}"
+                           maxlength="150"
+                           placeholder="e.g. Lunch with friends"
+                           required>
+                </div>
+
+                <div class="field">
+                    <label for="expenseDate">Expense Date</label>
+                    <input type="date"
+                           id="expenseDate"
+                           th:field="*{expenseDate}"
+                           required>
+                </div>
+
+                <div class="field full-width">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select id="paymentMethod"
+                            th:field="*{paymentMethod}">
+                        <option value="">Choose payment method</option>
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Net Banking">Net Banking</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="full-width">
+                    <button type="submit" class="primary-button">
+                        Save Expense
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Recent Transactions</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Payment</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="item : ${expenses}">
+                        <td th:text="${item.expenseDate}">2026-10-22</td>
+                        <td th:text="${item.description}">Lunch</td>
+                        <td>
+                            <span class="category"
+                                  th:text="${item.category}">Food</span>
+                        </td>
+                        <td th:text="${item.paymentMethod ?: 'N/A'}">UPI</td>
+                        <td class="amount"
+                            th:text="'₹' + ${#numbers.formatDecimal(item.amount, 1, 2)}">
+                            ₹250.00
+                        </td>
+                        <td>
+                            <form th:action="@{/expenses/delete/{id}(id=${item.id})}"
+                                  method="post"
+                                  onsubmit="return confirm('Delete this expense?');">
+                                <button type="submit" class="delete-button">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(expenses)}">
+                        <td colspan="6" class="empty">
+                            No expenses yet. Add your first expense above!
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer>
+    SpendWise — Make every rupee count.
+</footer>
+
+<script>
+    const dateInput = document.getElementById("expenseDate");
+
+    if (dateInput && !dateInput.value) {
+        const today = new Date();
+
+        const localDate = new Date(
+            today.getTime() - today.getTimezoneOffset() * 60000
+        ).toISOString().split("T")[0];
+
+        dateInput.value = localDate;
+    }
+</script>
+
+</body>
+</html>
